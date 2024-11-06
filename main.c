@@ -33,12 +33,12 @@ void endscreen(){
   if(points>=78){
     start=-1;
     clear();
-    sprite(0,0,"goodend.bmp");
+    sprite(0,0,"bmp/goodend.bmp");
   }
   if(lifes==0){
   start=-1;
   clear();
-  sprite(0,0,"badend.bmp");
+  sprite(0,0,"bmp/badend.bmp");
   }
 }
   
@@ -46,12 +46,12 @@ void endscreen(){
 void startmenu(){ 
     if(start == 2){
       clear();
-      sprite(0,0,"menu1.bmp");
+      sprite(0,0,"bmp/menu1.bmp");
       actualize();
     }
     if(start == 1){
       clear();
-      sprite(0,0,"menu2.bmp");
+      sprite(0,0,"bmp/menu2.bmp");
       actualize();
     }
   }
@@ -188,7 +188,7 @@ void square_tab(){
     for(tableau_x=1;tableau_x <= 14;tableau_x++){
         for(tableau_y=1;tableau_y <= 7;tableau_y++){
           if(tableau_bb[tableau_x][tableau_y] == 1){
-            sprite(tableau_x * 50, tableau_y*50, "brick.bmp");// 50/50 taille brique
+            sprite(tableau_x * 50, tableau_y*50, "bmp/brick.bmp");// 50/50 taille brique
          }
        }
     }
@@ -223,10 +223,10 @@ void drawGame(){
     clear();
     startmenu();
     if(start == 0){
-      sprite(0,0,"vamopalaplaya.bmp");
+      sprite(0,0,"bmp/vamopalaplaya.bmp");
       square_tab();
-      sprite(xplat,yplat,"beacon.bmp");// 120/30 taille platform
-      sprite(xb,yb,"slave.bmp"); // 10/10 taille balle
+      sprite(xplat,yplat,"bmp/beacon.bmp");// 120/30 taille platform
+      sprite(xb,yb,"bmp/slave.bmp"); // 10/10 taille balle
       colplat();
       colbrik();
       mouv_balle();
