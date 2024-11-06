@@ -47,10 +47,12 @@ void startmenu(){
     if(start == 2){
       clear();
       sprite(0,0,"menu1.bmp");
+      actualize();
     }
     if(start == 1){
       clear();
       sprite(0,0,"menu2.bmp");
+      actualize();
     }
   }
   
@@ -199,6 +201,23 @@ void init_game(){
   tableau();
 }
 
+//grand reset    
+void reset(){    
+    if(start == 3){
+      clear();
+      int points=0;
+      int start=2;
+      int lifes=3;
+      int xplat=WINDOW_WIDTH/2;
+      int yplat=WINDOW_HEIGHT-WINDOW_HEIGHT/10;
+      int tableau_bb[14][8];
+        yb = yplat-20;
+        xb = xplat+60;  
+      start = 2;
+      actualize();
+    }
+}
+
 //boucle qui tourne jusqua que le jeu se finnisse
 void drawGame(){ 
     clear();
@@ -212,9 +231,10 @@ void drawGame(){
       colbrik();
       mouv_balle();
       endscreen();
+      reset();
       actualize();
-      usleep(1000000 / FPS); 
     }
+    usleep(1000000 / FPS); 
 }
 
 void KeyPressed(SDL_Keycode touche){
@@ -225,7 +245,7 @@ void KeyPressed(SDL_Keycode touche){
             }
             if(start == -1){
               clear();
-              start = 0;
+              start = 3;
               lifes = 3;
               tableau();
             }
@@ -237,12 +257,12 @@ void KeyPressed(SDL_Keycode touche){
         case SDLK_p:
             printf("%d\n ",points);
             break;        
-        case SDLK_q:
+        case SDLK_LEFT:
             if(xplat>2){
               xplat = xplat - 5;
             }
             break;
-        case SDLK_d:
+        case SDLK_RIGHT:
             if(xplat<WINDOW_WIDTH-120){
               xplat = xplat + 5;
             }
@@ -279,8 +299,7 @@ void gameLoop() {
                     break;
                 default:
                     break;
-            }      actualize();
-      usleep(1000000 / FPS); 
+            }
         }
             drawGame();
     }
@@ -289,5 +308,4 @@ int main(){
     init(WINDOW_WIDTH, WINDOW_HEIGHT);
     init_game();
     gameLoop();
-    return(0);
-}
+    }
