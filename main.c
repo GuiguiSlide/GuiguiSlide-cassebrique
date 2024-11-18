@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 #include <unistd.h>
-#include "function.h"
 #include <SDL2/SDL_ttf.h>
+#include "sdl_helper/sdlhelper.h"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define FPS 60
@@ -93,33 +93,33 @@ void startmenu(){
       sprite(0,0,"bmp/menu2.bmp");
       actualize();
     }
-  }
-  
+}
+
 //collisions platforme
 void colplat(){
 
-droiteplatform = xplat+120;//haut droite
-gaucheplatform = xplat;//haut gauche
-basplatform = yplat+30;//bas gauche
-hautplatform = yplat;//haut gauche
+  droiteplatform = xplat+120;//haut droite
+  gaucheplatform = xplat;//haut gauche
+  basplatform = yplat+30;//bas gauche
+  hautplatform = yplat;//haut gauche
 
-gaucheball  = xb;//haut gauche
-droiteball  = xb+30;//haut droite
-basball  = yb+30;//bas gauche/(basball -5=centreb)
-hautball  = yb;//haut gauche
+  gaucheball  = xb;//haut gauche
+  droiteball  = xb+30;//haut droite
+  basball  = yb+30;//bas gauche/(basball -5=centreb)
+  hautball  = yb;//haut gauche
 
-//collisions  
-  if( vyb == 3 ){
-    if((gaucheball  <= droiteplatform && gaucheball  >= gaucheplatform )||( droiteball  <= droiteplatform && droiteball  >= gaucheplatform)){
-      if(basball >= hautplatform && basball <= basplatform){
-          vyb = vyb * -1;        
+  //collisions  de la plateforme
+    if( vyb == 3 ){
+      if((gaucheball  <= droiteplatform && gaucheball  >= gaucheplatform )||( droiteball  <= droiteplatform && droiteball  >= gaucheplatform)){
+        if(basball >= hautplatform && basball <= basplatform){
+            vyb = vyb * -1;        
+        }
       }
     }
-  }
-  if( vyb == -3 ){
-      if((gaucheball  <= droiteplatform && gaucheball  >= gaucheplatform) || (droiteball  <= droiteplatform && droiteball  >= gaucheplatform)){
-          if(hautball  <= basplatform && hautball  >= hautplatform){
-              vyb = vyb * -1;                   
+    if( vyb == -3 ){
+        if((gaucheball  <= droiteplatform && gaucheball  >= gaucheplatform) || (droiteball  <= droiteplatform && droiteball  >= gaucheplatform)){
+            if(hautball  <= basplatform && hautball  >= hautplatform){
+                vyb = vyb * -1;                   
           }
      }
   }
@@ -144,7 +144,7 @@ void colbrik(){
         gauchebrique = tableau_x;
     
     //collisions
-          if( droiteball <= droitebrique + 50 && gaucheball >= gauchebrique ){
+          if( droiteball <= droitebrique + 50 && gaucheball >= gauchebrique + 50 ){
               if( hautball <= basbrique + 50 && hautball >= basbrique + 50 + vyb ){
                 if( vyb == -3 ){
                    vyb = vyb * -1;
@@ -153,7 +153,7 @@ void colbrik(){
                    points=points+1;
                 } 
              }
-          if( basball <= hautbrique && basball >= hautbrique + vyb ){
+          if( basball <= hautbrique+50 && basball >= hautbrique + 50 + vyb ){
              if( vyb == 3 ){
                 vyb = vyb * -1;
                 tableau_bb[tableau_x][tableau_y] = 0;
@@ -162,8 +162,8 @@ void colbrik(){
              }
           }
         }
-       if(hautball  <= basbrique+50 && basball >= hautbrique ){
-          if(droiteball  <= gauchebrique && droiteball >= gauchebrique + vxb ){
+       if(hautball  <= hautbrique + 50 && basball >= basbrique + 50 ){
+          if(droiteball  >= gauchebrique + 50 && droiteball <= gauchebrique + 50 + vxb ){
             if(vxb == 3){
                vxb = vxb * -1;
                tableau_bb[tableau_x][tableau_y] = 0;
@@ -171,7 +171,7 @@ void colbrik(){
                points=points+1;
              }
            }
-           if(gaucheball  <= droitebrique +50 && gaucheball >= droitebrique + 50 +vxb){
+           if(gaucheball  >= droitebrique + 50 && gaucheball <= droitebrique + 50 + vxb){
              if(vxb == -3){
                  vxb = vxb * -1;
                  tableau_bb[tableau_x][tableau_y] = 0;
@@ -336,14 +336,14 @@ void gameLoop() {
     while (programLaunched == 1) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
-            switch (event.type) {
+            switch (event.type){
                 case SDL_QUIT:
                     programLaunched = 0;
                     break;
                 case SDL_MOUSEBUTTONUP:
                     printf("position de la souris x : %d , y : %d\n", event.motion.x, event.motion.y);
-                    yb=event.motion.x;
-                    xb=event.motion.y;
+                    xb=event.motion.x - 15;
+                    yb=event.motion.y - 15;
                     break;
                 case SDL_KEYDOWN:
                     KeyPressed(event.key.keysym.sym);
