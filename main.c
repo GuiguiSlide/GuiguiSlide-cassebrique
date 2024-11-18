@@ -28,6 +28,44 @@ int tableau_bb[14][8];
 int droiteplatform;int gaucheplatform;int basplatform;int hautplatform;
 int droiteball ;int gaucheball ;int basball ;int hautball ;
 int droitebrique;int gauchebrique;int basbrique;int hautbrique;
+void lifebar(){
+  if(lifes==3){
+    sprite(WINDOW_WIDTH-100,WINDOW_HEIGHT-50,"bmp/3lifes.bmp");
+  }
+  if(lifes==2){
+    sprite(WINDOW_WIDTH-100,WINDOW_HEIGHT-50,"bmp/2lifes.bmp");
+  }
+  if(lifes==1){
+    sprite(WINDOW_WIDTH-100,WINDOW_HEIGHT-50,"bmp/1lifes.bmp");
+  }
+}
+
+void xpbar(){
+  if(points>=0&&points<=10){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar1sur7.bmp");
+  }
+  if(points>=10&&points<=20){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar2sur7.bmp");
+  }
+  if(points>=20&&points<=30){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar3sur7.bmp");
+  }
+  if(points>=30&&points<=40){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar4sur7.bmp");
+  }
+  if(points>=40&&points<=50){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar5sur7.bmp");
+  }
+  if(points>=50&&points<=60){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar6sur7.bmp");
+  }
+  if(points>=60&&points<=70){
+    sprite(10,WINDOW_HEIGHT-210,"bmp/bar7sur7.bmp");
+  }
+  if(points>70){
+  sprite(0,0,"bmp/boom.bmp");
+  }
+}
 
 //menu de fin
 void endscreen(){
@@ -59,10 +97,12 @@ void startmenu(){
   
 //collisions platforme
 void colplat(){
+
 droiteplatform = xplat+120;//haut droite
 gaucheplatform = xplat;//haut gauche
 basplatform = yplat+30;//bas gauche
 hautplatform = yplat;//haut gauche
+
 gaucheball  = xb;//haut gauche
 droiteball  = xb+30;//haut droite
 basball  = yb+30;//bas gauche/(basball -5=centreb)
@@ -89,12 +129,13 @@ hautball  = yb;//haut gauche
 void colbrik(){
     for(tableau_x = 1;tableau_x <=  14;tableau_x++){
       for(tableau_y = 1;tableau_y <= 7;tableau_y++){
+          if(tableau_bb[tableau_x][tableau_y] == 1){
   
   //collisions de la balle
-        gaucheball = xb;
         droiteball  = xb+30;
         basball  = yb+30;
         hautball  = yb;
+        gaucheball = xb;
    
    //collisions de la brique
         droitebrique = tableau_x*50;
@@ -103,27 +144,26 @@ void colbrik(){
         gauchebrique = tableau_x;
     
     //collisions
-         if(tableau_bb[tableau_x][tableau_y] == 1){
-            if((gaucheball  <= droitebrique && gaucheball >= gauchebrique )||(droiteball  <= droitebrique && droiteball >= gauchebrique)){
-              if(hautball <= basbrique && hautball >= hautbrique){
-                if(vyb == -3){
+          if( droiteball <= droitebrique + 50 && gaucheball >= gauchebrique ){
+              if( hautball <= basbrique + 50 && hautball >= basbrique + 50 + vyb ){
+                if( vyb == -3 ){
                    vyb = vyb * -1;
                    tableau_bb[tableau_x][tableau_y] = 0;
                    printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from bottom\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                    points=points+1;
                 } 
-           }
-        if(basball >= hautbrique && basball <= basbrique){
-           if(vyb == 3){
-              vyb = vyb * -1;
-              tableau_bb[tableau_x][tableau_y] = 0;
-              printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from top\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
-              points=points+1;
-           }
-         }
-       }
-       if((hautball  <= basbrique && hautball >= hautbrique )||(basball  <= basbrique && basball >= hautbrique)){
-          if(droiteball  >= gauchebrique && droiteball <= droitebrique ){
+             }
+          if( basball <= hautbrique && basball >= hautbrique + vyb ){
+             if( vyb == 3 ){
+                vyb = vyb * -1;
+                tableau_bb[tableau_x][tableau_y] = 0;
+                printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from top\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
+                points=points+1;
+             }
+          }
+        }
+       if(hautball  <= basbrique+50 && basball >= hautbrique ){
+          if(droiteball  <= gauchebrique && droiteball >= gauchebrique + vxb ){
             if(vxb == 3){
                vxb = vxb * -1;
                tableau_bb[tableau_x][tableau_y] = 0;
@@ -131,19 +171,19 @@ void colbrik(){
                points=points+1;
              }
            }
-           if(gaucheball  <= droitebrique && gaucheball >= gauchebrique){
+           if(gaucheball  <= droitebrique +50 && gaucheball >= droitebrique + 50 +vxb){
              if(vxb == -3){
                  vxb = vxb * -1;
                  tableau_bb[tableau_x][tableau_y] = 0;
                  printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from right\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                  points=points+1;
-              }
             }
           }
         }
       }
     }
   }
+}
 
 //rebonds de la balle et mouvement
 void mouv_balle(){// ball
@@ -225,6 +265,8 @@ void drawGame(){
     startmenu();
     if(start == 0){
       sprite(0,0,"bmp/vamopalaplaya.bmp");
+      lifebar();
+      xpbar();
       square_tab();
       sprite(xplat,yplat,"bmp/beacon.bmp");// 120/30 taille platform
       sprite(xb,yb,"bmp/slave.bmp"); // 10/10 taille balle
@@ -268,6 +310,16 @@ void KeyPressed(SDL_Keycode touche){
               xplat = xplat + 5;
             }
             break;
+        case SDLK_q:
+            if(xplat>2){
+              xplat = xplat - 5;
+            }
+            break;
+        case SDLK_d:
+            if(xplat<WINDOW_WIDTH-120){
+              xplat = xplat + 5;
+            }
+            break;            
         case SDLK_ESCAPE:
             freeAndTerminate();
             break;
