@@ -78,6 +78,7 @@ void endscreen(){
   start=-1;
   clear();
   sprite(0,0,"bmp/badend.bmp");
+  audioLoadAndPlay("sounds/death.wav",-1);
   }
 }
   
@@ -144,7 +145,7 @@ void colbrik(){
         gauchebrique = tableau_x;
     
     //collisions
-          if( droiteball <= droitebrique + 50 && gaucheball >= gauchebrique + 50 ){
+          if( droiteball <= droitebrique + 50 && gaucheball >= gauchebrique ){
               if( hautball <= basbrique + 50 && hautball >= basbrique + 50 + vyb ){
                 if( vyb == -3 ){
                    vyb = vyb * -1;
@@ -153,7 +154,7 @@ void colbrik(){
                    points=points+1;
                 } 
              }
-          if( basball <= hautbrique+50 && basball >= hautbrique + 50 + vyb ){
+          if( basball <= hautbrique && basball >= hautbrique + vyb ){
              if( vyb == 3 ){
                 vyb = vyb * -1;
                 tableau_bb[tableau_x][tableau_y] = 0;
@@ -162,8 +163,8 @@ void colbrik(){
              }
           }
         }
-       if(hautball  <= hautbrique + 50 && basball >= basbrique + 50 ){
-          if(droiteball  >= gauchebrique + 50 && droiteball <= gauchebrique + 50 + vxb ){
+       if(hautball  <= hautbrique && basball >= basbrique +50 ){
+          if(droiteball  >= gauchebrique && droiteball <= gauchebrique + vxb ){
             if(vxb == 3){
                vxb = vxb * -1;
                tableau_bb[tableau_x][tableau_y] = 0;
@@ -171,7 +172,7 @@ void colbrik(){
                points=points+1;
              }
            }
-           if(gaucheball  >= droitebrique + 50 && gaucheball <= droitebrique + 50 + vxb){
+           if(gaucheball  >= droitebrique + 50 && gaucheball <= droitebrique +50 + vxb){
              if(vxb == -3){
                  vxb = vxb * -1;
                  tableau_bb[tableau_x][tableau_y] = 0;
@@ -240,6 +241,7 @@ void init_game(){
   yb = yplat-20;
   xb = xplat+60;  
   tableau();
+  audioLoadAndPlay("sounds/gamemusic.wav",-1);
 }
 
 //grand reset    
@@ -283,14 +285,14 @@ void drawGame(){
 void KeyPressed(SDL_Keycode touche){
     switch (touche) {
         case SDLK_g:
-            if(start != 0){
+            if(start >= 0){
               start = start-1;
             }
-            if(start == -1){
+            else if(start == -1){
               clear();
               start = 3;
-              lifes = 3;
-              tableau();
+              reset();
+              init_game();
             }
             break;
         case SDLK_SPACE:

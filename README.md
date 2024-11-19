@@ -1,10 +1,11 @@
 to fix:
 
-left and top collisions with the bricks (priority 0)
-a colomn brick glitching in and out (priority -1)
+left and top collisions with the bricks (priority -1)
+a colomn brick glitching in and out (priority 0)
 
 to do:
 
+make a better score system(priority 6)
 boss using modulo(priority 3)
 reboot game(priority 1)
 modified trajectories for platform collision(priority 2)
