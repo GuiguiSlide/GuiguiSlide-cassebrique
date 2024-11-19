@@ -22,7 +22,7 @@ int yb;
 //tableau
 int tableau_x;
 int tableau_y;
-int tableau_bb[16][9];
+int tableau_bb[15][9];
 
 //collisions
 int droiteplatform;int gaucheplatform;int basplatform;int hautplatform;
@@ -124,8 +124,8 @@ void colplat(){
 }
 //collisions briques
 void colbrik(){
-    for(tableau_x = 1;tableau_x <=  14;tableau_x++){
-      for(tableau_y = 1;tableau_y <= 7;tableau_y++){
+    for(tableau_x = 1;tableau_x <=  15;tableau_x++){
+      for(tableau_y = 1;tableau_y <= 8;tableau_y++){
           if(tableau_bb[tableau_x][tableau_y] == 1){
   
   //collisions de la balle
@@ -137,12 +137,12 @@ void colbrik(){
    //collisions de la brique
         droitebrique = tableau_x*50+50;
         basbrique = tableau_y*50+50;
-        hautbrique = tableau_y;
-        gauchebrique = tableau_x;
+        hautbrique = tableau_y+50;
+        gauchebrique = tableau_x+50;
     
     //collisions
-          if( droiteball < droitebrique && gaucheball > gauchebrique ){
-              if( hautball <= basbrique && hautball >= basbrique + vyb ){
+          if((droiteball <= droitebrique && droiteball >= gauchebrique )&&(gaucheball >= gauchebrique && gaucheball <= droitebrique)){
+              if( hautball <= basbrique && hautball >= basbrique){
                 if( vyb == -3 ){
                    vyb = vyb * -1;
                    tableau_bb[tableau_x][tableau_y] = 0;
@@ -150,7 +150,7 @@ void colbrik(){
                    points=points+1;
                 } 
              }
-          if( basball >= hautbrique && basball <= hautbrique + vyb ){
+          if( basball >= hautbrique && basball <= hautbrique){
              if( vyb == 3 ){
                 vyb = vyb * -1;
                 tableau_bb[tableau_x][tableau_y] = 0;
@@ -159,16 +159,16 @@ void colbrik(){
              }
           }
         }
-       if(basball < basbrique && hautball > hautbrique ){
-          if(droiteball <= gauchebrique && droiteball >= gauchebrique + vxb ){
+       if((basball <= basbrique && basball >= hautbrique)&&(hautball >= hautbrique && hautball <= basbrique)){
+          if(droiteball >= gauchebrique && droiteball <= gauchebrique){
             if(vxb == 3){
                vxb = vxb * -1;
                tableau_bb[tableau_x][tableau_y] = 0;
                printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from left\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                points=points+1;
-             }
-           }
-           if(gaucheball >= droitebrique && gaucheball <= droitebrique + vxb){
+            }
+          }
+           if(gaucheball <= droitebrique && gaucheball >= droitebrique){
              if(vxb == -3){
                  vxb = vxb * -1;
                  tableau_bb[tableau_x][tableau_y] = 0;
