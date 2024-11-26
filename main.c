@@ -22,7 +22,7 @@ int yb;
 //tableau
 int tableau_x;
 int tableau_y;
-int tableau_bb[16][6];
+int tableau_bb[15][5];
 
 //collisions
 int droiteplatform;int gaucheplatform;int basplatform;int hautplatform;
@@ -44,25 +44,25 @@ void xpbar(){
   if(points>=0&&points<=14){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar1sur7.bmp");
   }
-  if(points>=14&&points<=28){
+  if(points>=15&&points<=24){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar2sur7.bmp");
   }
-  if(points>=28&&points<=42){
+  if(points>=25&&points<=34){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar3sur7.bmp");
   }
-  if(points>=42&&points<=56){
+  if(points>=35&&points<=44){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar4sur7.bmp");
   }
-  if(points>=56&&points<=70){
+  if(points>=45&&points<=54){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar5sur7.bmp");
   }
-  if(points>=70&&points<=84){
+  if(points>=55&&points<=64){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar6sur7.bmp");
   }
-  if(points>=84&&points<=98){
+  if(points>=65&&points<=73){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar7sur7.bmp");
   }
-  if(points>98){
+  if(points>74){
   sprite(0,0,"bmp/boom.bmp");
   }
 }
@@ -77,7 +77,7 @@ void endscreen(){
   start=-1;
   clear();
   sprite(0,0,"bmp/badend.bmp");
-  audioLoadAndPlay("sounds/death.wav",-1);
+  audioLoadAndPlay("sounds/death.wav",1);
   }
 }
 //menu de commencement
@@ -107,14 +107,14 @@ void colplat(){
   hautball  = yb;//haut gauche
 
   //collisions  de la plateforme
-    if( vyb == 3 ){
+    if( vyb > 0 ){
       if((gaucheball <= droiteplatform && gaucheball >= gaucheplatform )||( droiteball <= droiteplatform && droiteball >= gaucheplatform)){
         if(basball >= hautplatform && basball <= basplatform){
             vyb = vyb * -1;        
         }
       }
     }
-    if( vyb == -3 ){
+    if( vyb < 0 ){
         if((gaucheball <= droiteplatform && gaucheball  >= gaucheplatform) || (droiteball <= droiteplatform && droiteball >= gaucheplatform)){
             if(hautball <= basplatform && hautball >= hautplatform){
                 vyb = vyb * -1;                   
@@ -124,56 +124,60 @@ void colplat(){
 }
 //collisions briques
 void colbrik(){
-    for(tableau_x = 0;tableau_x <=  16;tableau_x++){
-      for(tableau_y = 0;tableau_y <= 6;tableau_y++){
+    for(tableau_x = 1;tableau_x <= 15;tableau_x++){
+      for(tableau_y = 1;tableau_y <= 5;tableau_y++){
         if(tableau_bb[tableau_x][tableau_y] == 1){
   
   //collisions de la balle
-        droiteball  = xb+30;
-        basball  = yb+30;
-        hautball  = yb;
+        droiteball = xb+30;
+        basball = yb+30;
+        hautball = yb;
         gaucheball = xb;
    
    //collisions de la brique
         droitebrique = tableau_x*50+50;
         basbrique = tableau_y*50+50;
-        hautbrique = tableau_y+50;
-        gauchebrique = tableau_x+50;
+        hautbrique = tableau_y*50;
+        gauchebrique = tableau_x*50;
     
     //collisions
-        if(droiteball <= droitebrique && gaucheball >= gauchebrique){
-          if(hautball <= basbrique && hautball >= basbrique-50){
-            if( vyb == -3 ){
+        if((droiteball <= droitebrique) && (gaucheball >= gauchebrique)){
+          if((hautball <= basbrique) && (hautball >= basbrique-50)){
+            if( vyb < 0 ){
                    vyb = vyb * -1;
                    tableau_bb[tableau_x][tableau_y] = 0;
                    printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from bottom\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                    points=points+1;
+                   audioLoadAndPlay("sounds/brickbroken.wav",-1);
             } 
           }
-          if(basball >= hautbrique && basball <= hautbrique+50){
-            if( vyb == 3 ){
+          if((basball >= hautbrique) && (basball <= hautbrique+50)){
+            if( vyb > 0 ){
                 vyb = vyb * -1;
                 tableau_bb[tableau_x][tableau_y] = 0;
                 printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from top\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                 points=points+1;
+                audioLoadAndPlay("sounds/brickbroken.wav",-1);
             }
           }
         }
-        if(hautball <= hautbrique && basball >= basbrique){
-          if(droiteball >= gauchebrique && droiteball <= gauchebrique+50){
-            if( vxb == 3 ){
+        if((hautball >= hautbrique) && (basball <= basbrique)){
+          if((droiteball >= gauchebrique) && (droiteball <= gauchebrique+50)){
+            if( vxb > 0 ){
                vxb = vxb * -1;
                tableau_bb[tableau_x][tableau_y] = 0;
                printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from left\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                points=points+1;
+               audioLoadAndPlay("sounds/brickbroken.wav",-1);
             }
           }
-           if(gaucheball <= droitebrique & gaucheball >= droitebrique-50){
-             if( vxb == -3 ){
+           if((gaucheball <= droitebrique) && (gaucheball >= droitebrique-50)){
+             if( vxb < 0 ){
                  vxb = vxb * -1;
                  tableau_bb[tableau_x][tableau_y] = 0;
                  printf("%d\t%d\t%d\t%d\t%d\t was_destroyed from right\n",tableau_bb[tableau_x][tableau_y],tableau_y*50,tableau_x*50,yb,xb);
                  points=points+1;
+                 audioLoadAndPlay("sounds/brickbroken.wav",-1);
             }
           }
         }
@@ -185,13 +189,13 @@ void colbrik(){
 void mouv_balle(){// ball
   yb=yb+vyb;
   xb=xb+vxb;
-  if(vyb  ==  -3){
-    if(yb <= 4){
+  if(vyb  <  0){
+    if(yb < 5){
       vyb =  vyb  * -1;
     }
   }
-  if(vyb  ==  3){
-    if(yb+30 >= WINDOW_HEIGHT){
+  if(vyb  >  0){
+    if(yb+30 > WINDOW_HEIGHT){
       vyb = 0;
       vxb = 0;
       yb = yplat-20;
@@ -199,29 +203,29 @@ void mouv_balle(){// ball
       lifes=lifes-1;
     }
   }
-  if(vxb  ==  -3){
-    if(xb+2 <= 4){
+  if(vxb  <  0){
+    if(xb+2 < 5){
       vxb =  vxb  * -1;
     }
   }
-  if(vxb  ==  3){
-    if(xb+30 >= WINDOW_WIDTH){
+  if(vxb  >  0){
+    if(xb+30 > WINDOW_WIDTH){
       vxb =  vxb  * -1;
     }
   }
 }
 //crée un tableau 
 void tableau(){ 
-  for(tableau_x=0;tableau_x <= 16;tableau_x++){
-    for(tableau_y=0;tableau_y <= 6;tableau_y++){
+  for(tableau_x=1;tableau_x <= 15;tableau_x++){
+    for(tableau_y=1;tableau_y <= 5;tableau_y++){
       tableau_bb[tableau_x][tableau_y] = 1;
     }
   }
 }
 //utilise le tableau pour dessiner les briques
 void square_tab(){
-    for(tableau_x=0;tableau_x <= 16;tableau_x++){
-        for(tableau_y=0;tableau_y <= 6;tableau_y++){
+    for(tableau_x = 1;tableau_x <= 15;tableau_x++){
+        for(tableau_y = 1;tableau_y <= 5;tableau_y++){
           if(tableau_bb[tableau_x][tableau_y] == 1){
             sprite(tableau_x *50, tableau_y*50,"bmp/brick.bmp");
             //sprite(tableau_x * 50, tableau_y*50, "bmp/brick.bmp");// 50/50 taille brique
@@ -234,7 +238,7 @@ void init_game(){
   yb = yplat-20;
   xb = xplat+60;  
   tableau();
-  audioLoadAndPlay("sounds/gamemusic.wav",-1);
+  audioLoadAndPlay("sounds/gamemusic.wav",1);
 }
 //grand reset    
 void reset(){    
@@ -245,7 +249,7 @@ void reset(){
       int lifes=3;
       int xplat=WINDOW_WIDTH/2;
       int yplat=WINDOW_HEIGHT-WINDOW_HEIGHT/10;
-      int tableau_bb[16][6];
+      int tableau_bb[15][5];
         yb = yplat-20;
         xb = xplat+60;  
       start = 2;
@@ -301,6 +305,14 @@ void KeyPressed(SDL_Keycode touche){
               xplat = xplat + 5;
             }
             break;
+        case SDLK_UP:
+            vyb = vyb +1;
+            vxb = vxb +1;
+            break;
+        case SDLK_DOWN:
+            vyb = vyb -1;
+            vxb = vxb -1;
+            break;
         case SDLK_q:
             if(xplat>2){
               xplat = xplat - 5;
@@ -310,6 +322,9 @@ void KeyPressed(SDL_Keycode touche){
             if(xplat<WINDOW_WIDTH-120){
               xplat = xplat + 5;
             }
+            break;
+        case SDLK_b:
+            xplat = xb -60;
             break;            
         case SDLK_ESCAPE:
             freeAndTerminate();
