@@ -186,7 +186,7 @@ void mouv_balle(){// ball
   if(vyb  <  0){
     if(yb < 5){
       vyb =  vyb  * -1;
-      audioLoadAndPlay("sounds/bounce.wav",-1);  
+      //audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
   if(vyb  >  0){
@@ -196,19 +196,19 @@ void mouv_balle(){// ball
       yb = yplat-20;
       xb = xplat+60;
       lifes=lifes-1;
-      audioLoadAndPlay("hurt/bounce.wav",-1); 
+      audioLoadAndPlay("sounds/hit.wav",-1); 
     }
   }
   if(vxb  <  0){
     if(xb+2 < 5){
       vxb =  vxb  * -1;
-      audioLoadAndPlay("sounds/bounce.wav",-1);  
+      //audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
   if(vxb  >  0){
     if(xb+30 > WINDOW_WIDTH){
       vxb =  vxb  * -1;
-      audioLoadAndPlay("sounds/bounce.wav",-1);  
+      //audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
 }
