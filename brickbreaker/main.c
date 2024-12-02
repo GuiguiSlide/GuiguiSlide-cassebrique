@@ -41,37 +41,38 @@ void lifebar(){
   }
 }
 void xpbar(){
-  if(points>=0&&points<=14){
+  if(points>=0&&points<=11){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar1sur7.bmp");
   }
-  if(points>=15&&points<=24){
+  if(points>=12&&points<=21){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar2sur7.bmp");
   }
-  if(points>=25&&points<=34){
+  if(points>=22&&points<=31){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar3sur7.bmp");
   }
-  if(points>=35&&points<=44){
+  if(points>=32&&points<=41){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar4sur7.bmp");
   }
-  if(points>=45&&points<=54){
+  if(points>=42&&points<=51){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar5sur7.bmp");
   }
-  if(points>=55&&points<=64){
+  if(points>=52&&points<=61){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar6sur7.bmp");
   }
-  if(points>=65&&points<=73){
+  if(points>=62&&points<=71){
     sprite(10,WINDOW_HEIGHT-210,"bmp/bar7sur7.bmp");
   }
-  if(points>74){
+  if(points>71){
   sprite(0,0,"bmp/boom.bmp");
   }
 }
 //menu de fin
 void endscreen(){
-  if(points>75){
+  if(points>72){
     start=-1;
     clear();
     sprite(0,0,"bmp/goodend.bmp");
+    audioLoadAndPlay("sounds/win.wav",1);
   }
   if(lifes==0){
   start=-1;
@@ -196,7 +197,7 @@ void mouv_balle(){// ball
       yb = yplat-20;
       xb = xplat+60;
       lifes=lifes-1;
-      audioLoadAndPlay("sounds/hit.wav",-1); 
+      audioLoadAndPlay("sounds/hurt.wav",-1); 
     }
   }
   if(vxb  <  0){
