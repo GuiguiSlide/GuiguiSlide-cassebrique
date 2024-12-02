@@ -212,6 +212,10 @@ void mouv_balle(){// ball
       //audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
+  if((vxb==0)&&(vyb==0)){
+    yb = yplat-20;
+    xb = xplat+60;
+  }
 }
 //crée un tableau 
 void tableau(){ 
