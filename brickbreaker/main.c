@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 #include <unistd.h>
 #include <SDL2/SDL_ttf.h>
-#include "sdl_helper/sdlhelper.h"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define FPS 60
@@ -10,6 +9,7 @@
 int points=0;
 int start=2;
 int lifes=3;
+int compteur=0;
 
 //positions
 int xplat=WINDOW_WIDTH/2;
@@ -68,7 +68,7 @@ void xpbar(){
 }
 //menu de fin
 void endscreen(){
-  if(points>=75){
+  if(points>75){
     start=-1;
     clear();
     sprite(0,0,"bmp/goodend.bmp");
@@ -107,19 +107,13 @@ void colplat(){
   hautball  = yb;//haut gauche
 
   //collisions  de la plateforme
-    if( vyb > 0 ){
-      if((gaucheball <= droiteplatform && gaucheball >= gaucheplatform )||( droiteball <= droiteplatform && droiteball >= gaucheplatform)){
-        if(basball >= hautplatform && basball <= basplatform){
-            vyb = vyb * -1;        
-        }
+  if( vyb > 0 ){
+    if((gaucheball <= droiteplatform && gaucheball >= gaucheplatform )||( droiteball <= droiteplatform && droiteball >= gaucheplatform)){
+      if(basball >= hautplatform && basball <= basplatform){
+        vyb = vyb * -1; 
+        audioLoadAndPlay("sounds/bounce.wav",-1);       
       }
     }
-    if( vyb < 0 ){
-        if((gaucheball <= droiteplatform && gaucheball  >= gaucheplatform) || (droiteball <= droiteplatform && droiteball >= gaucheplatform)){
-            if(hautball <= basplatform && hautball >= hautplatform){
-                vyb = vyb * -1;                   
-          }
-     }
   }
 }
 //collisions briques
@@ -192,6 +186,7 @@ void mouv_balle(){// ball
   if(vyb  <  0){
     if(yb < 5){
       vyb =  vyb  * -1;
+      audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
   if(vyb  >  0){
@@ -201,16 +196,19 @@ void mouv_balle(){// ball
       yb = yplat-20;
       xb = xplat+60;
       lifes=lifes-1;
+      audioLoadAndPlay("hurt/bounce.wav",-1); 
     }
   }
   if(vxb  <  0){
     if(xb+2 < 5){
       vxb =  vxb  * -1;
+      audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
   if(vxb  >  0){
     if(xb+30 > WINDOW_WIDTH){
       vxb =  vxb  * -1;
+      audioLoadAndPlay("sounds/bounce.wav",-1);  
     }
   }
 }
@@ -219,20 +217,37 @@ void tableau(){
   for(tableau_x=1;tableau_x <= 15;tableau_x++){
     for(tableau_y=1;tableau_y <= 5;tableau_y++){
       tableau_bb[tableau_x][tableau_y] = 1;
+      compteur = 0;
     }
   }
 }
 //utilise le tableau pour dessiner les briques
 void square_tab(){
-    for(tableau_x = 1;tableau_x <= 15;tableau_x++){
-        for(tableau_y = 1;tableau_y <= 5;tableau_y++){
-          if(tableau_bb[tableau_x][tableau_y] == 1){
-            sprite(tableau_x *50, tableau_y*50,"bmp/brick.bmp");
-            //sprite(tableau_x * 50, tableau_y*50, "bmp/brick.bmp");// 50/50 taille brique
-         }
-       }
+  for(tableau_x = 1;tableau_x <= 14;tableau_x++){
+    for(tableau_y = 1;tableau_y <= 5;tableau_y++){
+      if(tableau_bb[tableau_x][tableau_y] == 1){
+        sprite(tableau_x *50, tableau_y*50,"bmp/brick.bmp");
+        compteur = 0;
+      }
+      /*if(tableau_bb[tableau_x][tableau_y] == 0){
+        if(compteur>=0&&compteur<=15){
+          sprite(tableau_x *50, tableau_y*50,"bmp/brickfissure.bmp");
+          compteur++;
+        }
+        if(compteur>=15&&compteur<=30){
+          tableau_bb[tableau_x][tableau_y] = -1;
+        }
+      }
+      if(tableau_bb[tableau_x][tableau_y] == -1){  
+          sprite(tableau_x *50, tableau_y*50,"bmp/bricksplode.bmp");
+          compteur++;
+      }
+      if(compteur>=30){
+        tableau_bb[tableau_x][tableau_y] = -2;
+      }*/
     }
-}
+  }
+} 
 //boucle qui tourne une seule fois
 void init_game(){
   yb = yplat-20;
@@ -241,18 +256,17 @@ void init_game(){
   audioLoadAndPlay("sounds/gamemusic.wav",1);
 }
 //grand reset    
-void reset(){    
+void reset(){
     if(start == 3){
       clear();
-      int points=0;
-      int start=2;
-      int lifes=3;
-      int xplat=WINDOW_WIDTH/2;
-      int yplat=WINDOW_HEIGHT-WINDOW_HEIGHT/10;
-      int tableau_bb[15][5];
+      points=0;
+      start=2;
+      lifes=3;
+      xplat=WINDOW_WIDTH/2;
+      yplat=WINDOW_HEIGHT-WINDOW_HEIGHT/10;
+      tableau_bb[15][5];
         yb = yplat-20;
         xb = xplat+60;  
-      start = 2;
       actualize();
     }
 }
@@ -260,6 +274,7 @@ void reset(){
 void drawGame(){ 
     clear();
     startmenu();
+    reset();
     if(start == 0){
       sprite(0,0,"bmp/vamopalaplaya.bmp");
       lifebar();
@@ -271,7 +286,6 @@ void drawGame(){
       colbrik();
       mouv_balle();
       endscreen();
-      reset();
       actualize();
     }
     usleep(1000000 / FPS); 
@@ -285,6 +299,7 @@ void KeyPressed(SDL_Keycode touche){
             else if(start == -1){
               clear();
               start = 3;
+              tableau();
               reset();
             }
             break;
@@ -294,13 +309,15 @@ void KeyPressed(SDL_Keycode touche){
             break;
         case SDLK_p:
             printf("%d\n",points);
+            printf("%d\n",start);
+            printf("%d\n",lifes);
             break;        
         case SDLK_LEFT:
             if(xplat>2){
               xplat = xplat - 5;
             }
             break;
-        case SDLK_RIGHT:
+        case SDLK_RIGHT://sdlkeyup et down pour la fluidité
             if(xplat<WINDOW_WIDTH-120){
               xplat = xplat + 5;
             }
