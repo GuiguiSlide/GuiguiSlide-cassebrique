@@ -22,7 +22,7 @@ int yb;
 //tableau
 int tableau_x;
 int tableau_y;
-int tableau_bb[15][5];
+int tableau_bb[15][6];
 
 //collisions
 int droiteplatform;int gaucheplatform;int basplatform;int hautplatform;
