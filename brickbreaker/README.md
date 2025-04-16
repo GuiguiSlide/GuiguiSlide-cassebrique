@@ -1,10 +1,3 @@
-to fix:
-brick manquante a droite :(
-
-to do:
-levels(6)
-boss using modulo(3)
-animation of brick breaking lol(4)
-fluidité(barre 1)
-*
-pour lancer le jeux il faut aller dans le dossier du jeux en luis meme
+# this is the first project i have done when i joined CESI 
+# it made me discover programming via the "C" language
+- here is a preview of what i made
